@@ -1,16 +1,38 @@
 [versions]
 agp = "8.5.1"
+coilCompose = "2.6.0"
+converterGson = "2.11.0"
+coreTesting = "1.1.1"
+hiltCompiler = "2.51.1"
+hiltNavigationCompose = "1.2.0"
+junitJupiter = "5.10.3"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
-lifecycleRuntimeKtx = "2.8.4"
-activityCompose = "1.9.1"
-composeBom = "2024.04.01"
+kotlinxCoroutinesTest = "1.8.1"
+lifecycleRuntimeKtx = "2.8.3"
+activityCompose = "1.9.0"
+composeBom = "2024.06.00"
+mockitoCore = "5.4.0"
+mockitoInline = "5.2.0"
+mockk = "1.13.11"
+retrofit = "2.11.0"
+hiltAndroid = "2.51.1"
+accompanistSwipeRefresh = "0.34.0"
+timber = "5.0.1"
+turbine = "1.1.0"
+
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+coil = { module = "io.coil-kt:coil", version.ref = "coilCompose" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
+core-testing = { module = "android.arch.core:core-testing", version.ref = "coreTesting" }
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltCompiler" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -24,8 +46,19 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junitJupiter" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
+mockito-core = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoCore" }
+mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockitoInline" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
+accompanistSwipeRefresh = { group = "com.google.accompanist", name = "accompanist-swiperefresh", version.ref = "accompanistSwipeRefresh" }
+timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
+
 
 [plugins]
-android-application = { id = "com.android.application", version.ref = "agp" }
-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+androidApplication = { id = "com.android.application", version.ref = "agp" }
+jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 
