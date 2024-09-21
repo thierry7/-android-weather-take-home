@@ -1,9 +1,14 @@
 package com.example.weatherapp.di
 
+import android.content.Context
+import androidx.room.Room
+import com.example.weatherapp.model.local.MyDatabase
+import com.example.weatherapp.model.local.WeatherDao
 import com.example.weatherapp.model.remote.WeatherApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -27,9 +32,24 @@ object NetworkModule {
             .build()
     }
 
+    @Singleton
+    @Provides
+    fun provideDataBase(@ApplicationContext context: Context): MyDatabase {
+        return Room.databaseBuilder(
+            context.applicationContext,
+            MyDatabase::class.java,
+            "ForcastData.db"
+        ).fallbackToDestructiveMigration()
+            .build()
+    }
+
+
     @Provides
     @Singleton
     fun provideWeatherApi(retrofit: Retrofit): WeatherApi {
         return retrofit.create(WeatherApi::class.java)
     }
+
+    @Provides
+    fun provideWeatherDao(database: MyDatabase): WeatherDao = database.weatherDao()
 }
