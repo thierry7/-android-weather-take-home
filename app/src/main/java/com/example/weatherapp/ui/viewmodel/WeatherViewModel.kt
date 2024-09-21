@@ -24,12 +24,23 @@ class WeatherViewModel @Inject constructor(
     private val _weatherForecast = MutableStateFlow<DataResult<List<WeatherData>>>(DataResult.Loading)
     val weatherForecast: StateFlow<DataResult<List<WeatherData>>> = _weatherForecast
 
+    private val _dailyWeather = MutableStateFlow<DataResult<WeatherData>>(DataResult.Loading)
+    val dailyWeather : StateFlow<DataResult<WeatherData>> = _dailyWeather
+
     // Method to fetch weather data from the repository
     @RequiresApi(Build.VERSION_CODES.O)
     fun getDailyForecast(zip: String) {
         viewModelScope.launch {
             repo.getListOfDailyForecast(zip).collect { result ->
                 _weatherForecast.value = result
+            }
+        }
+    }
+
+    fun getDailyData(day : String){
+        viewModelScope.launch {
+            repo.getWeatherByDay(day).collect { result ->
+                _dailyWeather.value = result
             }
         }
     }

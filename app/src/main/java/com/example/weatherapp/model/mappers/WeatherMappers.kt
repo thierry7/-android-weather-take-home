@@ -17,23 +17,21 @@ fun WeatherResponse.toWeatherData(): List<WeatherData> {
         val day = dailyForecast.date
         val time = dailyForecast.date ?: ""
         val temperature = dailyForecast.temperature?.maximum?.value ?: 0.0
-        val precipitation = dailyForecast.day?.precipitationType
-        val humidity = dailyForecast.day?.iconPhrase?.let {
-            75.0 // Assuming a default value for humidity, adjust accordingly
-        } ?: 75.0
-        val windSpeed = dailyForecast.day?.icon ?: 0
+        val humidity = dailyForecast.day?.relativeHumidity?.average ?: 0
+        val windSpeed = dailyForecast.day?.wind?.speed?.value ?: 0
         val weatherType = dailyForecast.day?.localSource?.weatherCode?.toInt() ?: 0
         val description = dailyForecast.day?.iconPhrase!!
+        val rainDrop = dailyForecast.day?.rain?.value ?: 0
+
         WeatherData(
             day = day,
-            time = LocalDateTime.parse(time, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX")
-            ),
+            time = LocalDateTime.parse(time, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX")),
             temperature = temperature,
-            precipitation = precipitation,
             windSpeed = windSpeed.toDouble(),
-            humidity = humidity,
+            humidity = humidity.toDouble(),
             weatherType = WeatherType.fromWMO(weatherType),
-            description = description
+            description = description,
+            rainDrop = rainDrop.toDouble()
         )
     }
 }
@@ -44,19 +42,22 @@ fun WeatherResponse.toWeatherEntity(): List<WeatherEntity> {
         val day = dailyForecast.date
         val time = dailyForecast.date ?: ""
         val temperature = dailyForecast.temperature?.maximum?.value ?: 0.0
-        val precipitation = dailyForecast.day?.precipitationType
-        val windSpeed = dailyForecast.day?.icon ?: 0
+        val humidity = dailyForecast.day?.relativeHumidity?.average ?: 0
+        val windSpeed = dailyForecast.day?.wind?.speed?.value ?: 0
         val weatherType = dailyForecast.day?.localSource?.weatherCode?.toInt() ?: 0
         val description = dailyForecast.day?.iconPhrase!!
+        val rainDrop = dailyForecast.day?.rain?.value?.times(100) ?: 0
         WeatherEntity(
             day = day!!,
             time = LocalDateTime.parse(time, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX")
             ),
             temperature = temperature.toDouble(),
-            precipitation = precipitation,
             windSpeed = windSpeed.toDouble(),
             weatherType = WeatherType.fromWMO(weatherType),
-            description = description
+            description = description,
+            humidity = humidity.toDouble(),
+            rainDrop = rainDrop.toDouble()
+
         )
     }
 }
@@ -65,11 +66,11 @@ fun WeatherEntity.toWeatherData(): WeatherData {
         day = this.day,
         time = this.time,
         temperature = this.temperature,
-        precipitation = this.precipitation,
-        humidity = 0.0, // Assuming you don't have humidity in the entity, you can provide a default value
+        humidity = this.humidity,
         windSpeed = this.windSpeed,
         weatherType = this.weatherType,
-        description = this.description
+        description = this.description,
+        rainDrop = this.rainDrop
     )
 }
 
@@ -78,10 +79,11 @@ fun WeatherData.toWeatherEntity(): WeatherEntity {
         day = this.day!!,
         time = this.time,
         temperature = this.temperature.toDouble(),
-        precipitation = this.precipitation,
         windSpeed = this.windSpeed,
         weatherType = this.weatherType,
-        description = this.description
+        description = this.description,
+        humidity = this.humidity,
+        rainDrop = this.rainDrop
     )
 }
 fun List<WeatherEntity>.toWeatherDataList(): List<WeatherData> {

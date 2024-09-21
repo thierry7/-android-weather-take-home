@@ -8,6 +8,8 @@ interface WeatherApi {
 
         @GET("forecasts/v1/daily/5day/{locationKey}")
         suspend fun getWeatherForecast(@Path("locationKey") locationKey: String,
-                                       @Query("apikey") apiKey: String): WeatherResponse
+                                       @Query("apikey") apiKey: String,
+                                       @Query("details") details: Boolean,
+        ): WeatherResponse
 
 }

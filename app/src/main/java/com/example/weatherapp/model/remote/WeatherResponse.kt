@@ -67,12 +67,45 @@ data class LocalSource (
 
 data class Day (
 
-    @SerializedName("Icon"                   ) var icon                   : Int?         = null,
-    @SerializedName("IconPhrase"             ) var iconPhrase             : String?      = null,
-    @SerializedName("HasPrecipitation"       ) var hasPrecipitation       : Boolean?     = null,
-    @SerializedName("PrecipitationType"      ) var precipitationType      : String?      = null,
-    @SerializedName("PrecipitationIntensity" ) var precipitationIntensity : String?      = null,
-    @SerializedName("LocalSource"            ) var localSource            : LocalSource? = LocalSource()
+    @SerializedName("Icon"                     ) var icon                     : Int?                     = null,
+    @SerializedName("IconPhrase"               ) var iconPhrase               : String?                  = null,
+    @SerializedName("HasPrecipitation"         ) var hasPrecipitation         : Boolean?                 = null,
+    @SerializedName("PrecipitationType"        ) var PrecipitationType        : String?                  = null,
+    @SerializedName("PrecipitationIntensity"   ) var PrecipitationIntensity   : String?                  = null,
+    @SerializedName("LocalSource"              ) var localSource              : LocalSource?             = LocalSource(),
+    @SerializedName("ShortPhrase"              ) var ShortPhrase              : String?                  = null,
+    @SerializedName("LongPhrase"               ) var LongPhrase               : String?                  = null,
+    @SerializedName("IceProbability"           ) var IceProbability           : Int?                     = null,
+    @SerializedName("Wind"                     ) var wind                     : Wind?                    = Wind(),
+    @SerializedName("Rain"                     ) var rain                     : Rain?                    = Rain(),
+    @SerializedName("RelativeHumidity"         ) var relativeHumidity         : RelativeHumidity?        = RelativeHumidity(),
+
+)
+data class Rain (
+
+    @SerializedName("Value"    ) var value    : Double?    = null,
+    @SerializedName("Unit"     ) var unit     : String? = null,
+    @SerializedName("UnitType" ) var unitType : Int?    = null
+
+)
+
+data class Wind (
+    @SerializedName("Speed"     ) var speed     : Speed?     = Speed(),
+)
+
+data class Speed (
+
+    @SerializedName("Value"    ) var value    : Double? = null,
+    @SerializedName("Unit"     ) var unit     : String? = null,
+    @SerializedName("UnitType" ) var unitType : Int?    = null
+
+)
+
+data class RelativeHumidity (
+
+    @SerializedName("Minimum" ) var minimum : Int? = null,
+    @SerializedName("Maximum" ) var maximum : Int? = null,
+    @SerializedName("Average" ) var average : Int? = null
 
 )
 

@@ -2,6 +2,7 @@ package com.example.weatherapp.domain.repository
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.ui.util.trace
 import com.example.weatherapp.model.mappers.toWeatherData
 import com.example.weatherapp.model.remote.WeatherApi
 import com.example.weatherapp.domain.weather.WeatherData
@@ -29,7 +30,7 @@ class WeatherRepo @Inject constructor(
             emit(DataResult.Loading)
             try {
                 // Attempt to fetch data from the API
-                val response = weatherApi.getWeatherForecast(zip, apiKey)
+                val response = weatherApi.getWeatherForecast(zip, apiKey, true)
 
                 // Cache the response in the local database
                 weatherDao.insertAll(response.toWeatherEntity())
@@ -44,7 +45,8 @@ class WeatherRepo @Inject constructor(
                 if (localData.isNotEmpty()) {
                     emit(DataResult.Success(localData)) // Return cached data
                 } else {
-                    emit(DataResult.Error(Exception("No internet and no cached data available.")))
+                    emit(DataResult.Error(Exception("No internet and no cached data available." +
+                            "Caused By ${e.message}")))
                 }
             }
         }.flowOn(Dispatchers.IO).catch { e ->

@@ -13,8 +13,9 @@ data class WeatherEntity(
     val day : String,
     val time: LocalDateTime,
     val temperature: Double,
-    val precipitation: String?,
     val windSpeed: Double,
     val weatherType: WeatherType,
-    val description: String
+    val description: String,
+    val humidity: Double,
+    val rainDrop: Double
 )

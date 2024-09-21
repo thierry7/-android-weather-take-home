@@ -2,12 +2,14 @@ package com.example.weatherapp.ui
 
 import android.os.Build
 import android.os.Bundle
+import android.view.RoundedCorner
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,6 +22,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -39,6 +42,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph
 import com.example.weatherapp.domain.weather.WeatherData
 import com.example.weatherapp.ui.theme.WeatherAppTheme
 import com.example.weatherapp.domain.util.DataResult
@@ -46,6 +51,8 @@ import com.example.weatherapp.ui.viewmodel.WeatherViewModel
 import com.example.weatherapp.ui.theme.DeepBlue
 import com.example.weatherapp.ui.theme.DarkBlue
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -55,7 +62,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             WeatherAppTheme {
-                WeatherScreen(hiltViewModel())
+                MyGraph()
             }
         }
     }
@@ -65,7 +72,7 @@ class MainActivity : ComponentActivity() {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun WeatherScreen(viewModel: WeatherViewModel) {
+fun WeatherScreen(viewModel: WeatherViewModel = hiltViewModel(), navController: NavController) {
     val weatherState by viewModel.weatherForecast.collectAsState()
     var zipCode by remember { mutableStateOf("") }
 
@@ -98,12 +105,31 @@ fun WeatherScreen(viewModel: WeatherViewModel) {
             }
             is DataResult.Success -> {
                 val weatherList = (weatherState as DataResult.Success<List<WeatherData>>).data
+
                 LazyColumn {
                     items(weatherList) { weatherData ->
+
+                        val currentDate = LocalDate.now()
+
+                        // Format the weather date and compare with today
+                        val weatherDate = weatherData.time.toLocalDate() // Assuming `weatherData.time` is a LocalDateTime
+                        val formattedDate = if (weatherDate == currentDate) {
+                            "Today"
+                        } else {
+                            weatherData.time.format(DateTimeFormatter.ofPattern("EEEE")) // Name of the day (e.g., Monday)
+                        }
                         Card(modifier = Modifier
+                            .clickable {
+                                navController.navigate("WeatherCard/${weatherData.day}")
+                            }
                             .padding(8.dp)
-                            .background(DeepBlue)
-                            .fillMaxHeight()) {
+                            .background(DarkBlue)
+                            .fillMaxHeight(),
+                            shape = RoundedCornerShape(20.dp),
+
+
+                            )
+                        {
                             Row(modifier = Modifier
                                 .fillMaxWidth()
                                 .background(DeepBlue)
@@ -111,19 +137,20 @@ fun WeatherScreen(viewModel: WeatherViewModel) {
                                 verticalAlignment = Alignment.CenterVertically
 
                             ) {
-                                Text(text ="${weatherData.time}",
+                                Text(text = formattedDate,
+                                    modifier = Modifier.weight(.3f),
                                     color = Color.White,
-                                    textAlign = TextAlign.Center
+                                    fontSize = 20.sp,
+                                    textAlign = TextAlign.Start
                                 )
                                Spacer(modifier = Modifier.width(12.dp))
                                 Image(
                                     painter = painterResource(id = weatherData.weatherType.iconRes),
                                     contentDescription = null,
-                                    modifier = Modifier.width(60.dp),
-                                    alignment =  Alignment.Center
+                                    modifier = Modifier.width(40.dp).weight(.2f),
                                 )
                                 Spacer(modifier = Modifier.width(12.dp))
-                                Text(text=" ${weatherData.weatherType}", color = Color.White)
+                                Text(text=" ${weatherData.weatherType}", color = Color.White,  fontSize = 20.sp)
                                 Spacer(modifier = Modifier.width(12.dp))
                                 Text(text=" ${weatherData.temperature}°F",
                                     fontSize = 20.sp,
