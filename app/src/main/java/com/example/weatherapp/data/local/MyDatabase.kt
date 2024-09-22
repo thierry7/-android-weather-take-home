@@ -1,10 +1,9 @@
-package com.example.weatherapp.model.local
+package com.example.weatherapp.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverter
 import androidx.room.TypeConverters
-import com.example.weatherapp.model.mappers.Converters
+import com.example.weatherapp.data.mappers.Converters
 
 
 @Database(entities = [WeatherEntity::class], version = 1)

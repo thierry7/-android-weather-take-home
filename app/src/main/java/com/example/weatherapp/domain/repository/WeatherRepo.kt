@@ -2,14 +2,13 @@ package com.example.weatherapp.domain.repository
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.ui.util.trace
-import com.example.weatherapp.model.mappers.toWeatherData
-import com.example.weatherapp.model.remote.WeatherApi
+import com.example.weatherapp.data.mappers.toWeatherData
+import com.example.weatherapp.data.remote.WeatherApi
 import com.example.weatherapp.domain.weather.WeatherData
 import com.example.weatherapp.domain.util.DataResult
-import com.example.weatherapp.model.local.WeatherDao
-import com.example.weatherapp.model.mappers.toWeatherDataList
-import com.example.weatherapp.model.mappers.toWeatherEntity
+import com.example.weatherapp.data.local.WeatherDao
+import com.example.weatherapp.data.mappers.toWeatherDataList
+import com.example.weatherapp.data.mappers.toWeatherEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -43,7 +42,7 @@ class WeatherRepo @Inject constructor(
                 val localData = weatherDao.getWeatherForcast().toWeatherDataList()
 
                 if (localData.isNotEmpty()) {
-                    emit(DataResult.Success(localData)) // Return cached data
+                    emit(DataResult.Success(localData))
                 } else {
                     emit(DataResult.Error(Exception("No internet and no cached data available." +
                             "Caused By ${e.message}")))
@@ -54,7 +53,6 @@ class WeatherRepo @Inject constructor(
         }
     }
 
-    // Method to get weather by a specific day
     suspend fun getWeatherByDay(day: String): Flow<DataResult<WeatherData>> {
         return flow {
             emit(DataResult.Loading)

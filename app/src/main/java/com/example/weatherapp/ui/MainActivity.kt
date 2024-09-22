@@ -2,7 +2,6 @@ package com.example.weatherapp.ui
 
 import android.os.Build
 import android.os.Bundle
-import android.view.RoundedCorner
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -26,8 +24,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -43,13 +43,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavGraph
-import com.example.weatherapp.domain.weather.WeatherData
-import com.example.weatherapp.ui.theme.WeatherAppTheme
 import com.example.weatherapp.domain.util.DataResult
-import com.example.weatherapp.ui.viewmodel.WeatherViewModel
-import com.example.weatherapp.ui.theme.DeepBlue
+import com.example.weatherapp.domain.weather.WeatherData
 import com.example.weatherapp.ui.theme.DarkBlue
+import com.example.weatherapp.ui.theme.DeepBlue
+import com.example.weatherapp.ui.theme.WeatherAppTheme
+import com.example.weatherapp.ui.viewmodel.WeatherViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -70,21 +69,36 @@ class MainActivity : ComponentActivity() {
 
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun WeatherScreen(viewModel: WeatherViewModel = hiltViewModel(), navController: NavController) {
     val weatherState by viewModel.weatherForecast.collectAsState()
     var zipCode by remember { mutableStateOf("") }
 
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(DarkBlue)
+        .padding(top = 20.dp)
+    ){
+
     Column(modifier = Modifier
-        .padding(16.dp)
+        .padding(30.dp)
         .background(DarkBlue)
         .fillMaxSize()) {
         TextField(
             value = zipCode,
             onValueChange = { zipCode = it },
-            label = { Text("Enter Zip Code") },
-            modifier = Modifier.fillMaxWidth()
+            label = { Text("Enter Zip Code", color = Color.White,
+                textAlign = TextAlign.Center) },
+            modifier = Modifier.fillMaxWidth(),
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = DeepBlue,
+                focusedTextColor = Color.White,
+                cursorColor = Color.White,
+                focusedIndicatorColor = Color.White,
+                unfocusedIndicatorColor = Color.White
+            )
         )
         Button(
             onClick = { viewModel.getDailyForecast(zipCode) },
@@ -112,22 +126,22 @@ fun WeatherScreen(viewModel: WeatherViewModel = hiltViewModel(), navController: 
                         val currentDate = LocalDate.now()
 
                         // Format the weather date and compare with today
-                        val weatherDate = weatherData.time.toLocalDate() // Assuming `weatherData.time` is a LocalDateTime
+                        val weatherDate =
+                            weatherData.time.toLocalDate() // Assuming `weatherData.time` is a LocalDateTime
                         val formattedDate = if (weatherDate == currentDate) {
                             "Today"
                         } else {
                             weatherData.time.format(DateTimeFormatter.ofPattern("EEEE")) // Name of the day (e.g., Monday)
                         }
+
                         Card(modifier = Modifier
                             .clickable {
                                 navController.navigate("WeatherCard/${weatherData.day}")
                             }
-                            .padding(8.dp)
+                            .padding(top = 12.dp)
                             .background(DarkBlue)
-                            .fillMaxHeight(),
+                            .fillMaxSize(),
                             shape = RoundedCornerShape(20.dp),
-
-
                             )
                         {
                             Row(modifier = Modifier
@@ -137,22 +151,32 @@ fun WeatherScreen(viewModel: WeatherViewModel = hiltViewModel(), navController: 
                                 verticalAlignment = Alignment.CenterVertically
 
                             ) {
-                                Text(text = formattedDate,
-                                    modifier = Modifier.weight(.3f),
+                                Text(
+                                    text = formattedDate,
+                                    modifier = Modifier
+                                        .weight(.3f)
+                                        .padding(8.dp),
                                     color = Color.White,
-                                    fontSize = 20.sp,
+                                    fontSize = 18.sp,
                                     textAlign = TextAlign.Start
                                 )
-                               Spacer(modifier = Modifier.width(12.dp))
+                                Spacer(modifier = Modifier.width(12.dp))
                                 Image(
                                     painter = painterResource(id = weatherData.weatherType.iconRes),
                                     contentDescription = null,
-                                    modifier = Modifier.width(40.dp).weight(.2f),
+                                    modifier = Modifier
+                                        .width(40.dp)
+                                        .weight(.2f),
                                 )
                                 Spacer(modifier = Modifier.width(12.dp))
-                                Text(text=" ${weatherData.weatherType}", color = Color.White,  fontSize = 20.sp)
+                                Text(
+                                    text = " ${weatherData.weatherType}",
+                                    color = Color.White,
+                                    fontSize = 18.sp
+                                )
                                 Spacer(modifier = Modifier.width(12.dp))
-                                Text(text=" ${weatherData.temperature}°F",
+                                Text(
+                                    text = " ${weatherData.temperature}°F",
                                     fontSize = 20.sp,
                                     color = Color.White,
                                     textAlign = TextAlign.End,
@@ -163,16 +187,14 @@ fun WeatherScreen(viewModel: WeatherViewModel = hiltViewModel(), navController: 
                             }
                         }
                     }
-                }
+                    }
+
             }
             is DataResult.Error -> {
                 Text("Failed to load weather data: ${(weatherState as DataResult.Error).exception.message}")
             }
         }
     }
+    }
 }
 
-@Composable
-fun WeatherCard(weatherData: WeatherData, backgroundColor: Color){
-
-}

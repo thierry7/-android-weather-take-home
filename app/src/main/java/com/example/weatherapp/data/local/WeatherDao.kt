@@ -1,10 +1,10 @@
-package com.example.weatherapp.model.local
+package com.example.weatherapp.data.local
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.weatherapp.domain.weather.WeatherData
+
 @Dao
 interface WeatherDao {
 

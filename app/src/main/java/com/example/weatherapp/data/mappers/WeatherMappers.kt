@@ -1,12 +1,12 @@
-package com.example.weatherapp.model.mappers
+package com.example.weatherapp.data.mappers
 
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.room.TypeConverter
-import com.example.weatherapp.model.remote.WeatherResponse
+import com.example.weatherapp.data.remote.WeatherResponse
 import com.example.weatherapp.domain.weather.WeatherData
 import com.example.weatherapp.domain.weather.WeatherType
-import com.example.weatherapp.model.local.WeatherEntity
+import com.example.weatherapp.data.local.WeatherEntity
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 

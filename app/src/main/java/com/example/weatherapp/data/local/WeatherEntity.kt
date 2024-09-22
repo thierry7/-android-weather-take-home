@@ -1,4 +1,4 @@
-package com.example.weatherapp.model.local
+package com.example.weatherapp.data.local
 
 import androidx.annotation.NonNull
 import androidx.room.Entity

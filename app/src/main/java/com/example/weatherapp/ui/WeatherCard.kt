@@ -61,7 +61,6 @@ fun WeatherCard(
 
             val currentDate = LocalDate.now()
 
-            // Format the weather date and compare with today
             val weatherDate = (weather as DataResult.Success<WeatherData>).data.time.toLocalDate() // Assuming `weatherData.time` is a LocalDateTime
             val formattedDate = if (weatherDate == currentDate) {
                 "Today"
