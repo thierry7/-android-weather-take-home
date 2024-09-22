@@ -104,7 +104,7 @@ fun WeatherCard(
                                 id = (weather as DataResult.Success<WeatherData>)
                                     .data.weatherType.iconRes),
                             contentDescription = null,
-                            modifier = Modifier.width(200.dp)
+                            modifier = Modifier.height(120.dp)
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
@@ -140,7 +140,7 @@ fun WeatherCard(
                             )
                             WeatherDataDisplay(
                                 value = (weather as DataResult.Success<WeatherData>).data.windSpeed.roundToInt(),
-                                unit = "km/h",
+                                unit = "mi/h",
                                 icon = ImageVector.vectorResource(id = R.drawable.baseline_wind),
                                 iconTint = Color.White,
                                 textStyle = TextStyle(color = Color.White)
