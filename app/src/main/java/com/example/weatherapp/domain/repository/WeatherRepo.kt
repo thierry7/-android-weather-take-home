@@ -31,15 +31,19 @@ class WeatherRepo @Inject constructor(
                 // Attempt to fetch data from the API
                 val response = weatherApi.getWeatherForecast(zip, apiKey, true)
 
+                // Delete old data for the zip code
+                weatherDao.deleteByZipCode(zip)
+
                 // Cache the response in the local database
-                weatherDao.insertAll(response.toWeatherEntity())
+                weatherDao.insertAll(response.toWeatherEntity(zip))
 
                 // Emit the cached data from the local database
-                val data = DataResult.Success(weatherDao.getWeatherForcast().toWeatherDataList())
+                val data = DataResult.Success(weatherDao.getWeatherForecastByZip(zip)
+                        .toWeatherDataList())
                 emit(data)
             } catch (e: Exception) {
                 // If the API call fails (e.g., no internet), fetch from the local database
-                val localData = weatherDao.getWeatherForcast().toWeatherDataList()
+                val localData = weatherDao.getWeatherForecastByZip(zip).toWeatherDataList()
 
                 if (localData.isNotEmpty()) {
                     emit(DataResult.Success(localData))
@@ -53,12 +57,12 @@ class WeatherRepo @Inject constructor(
         }
     }
 
-    suspend fun getWeatherByDay(day: String): Flow<DataResult<WeatherData>> {
+    suspend fun getWeatherByDay(id: String): Flow<DataResult<WeatherData>> {
         return flow {
             emit(DataResult.Loading)
             try {
                 // Attempt to fetch the weather data for the specific day from the database
-                val weather = weatherDao.getWeatherByDay(day).toWeatherData()
+                val weather = weatherDao.getWeatherByDay(id).toWeatherData()
                 emit(DataResult.Success(weather))
             } catch (e: Exception) {
                 emit(DataResult.Error(e))

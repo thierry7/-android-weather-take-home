@@ -12,11 +12,11 @@ fun MyGraph(){
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "WeatherScreen"){
         composable("WeatherScreen"){ WeatherScreen(hiltViewModel(), navController) }
-        composable("WeatherCard/{day}",
-            arguments = listOf(navArgument("day") { defaultValue = "No day" })
+        composable("WeatherCard/{id}",
+            arguments = listOf(navArgument("id") { defaultValue = "No id" })
 
         ){ backStackEntry ->
-            WeatherCard(backStackEntry.arguments?.getString("day")?: "No_day", hiltViewModel())
+            WeatherCard(backStackEntry.arguments?.getString("id")?: "No_id", hiltViewModel())
         }
     }
 }

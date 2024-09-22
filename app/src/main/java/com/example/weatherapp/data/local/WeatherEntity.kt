@@ -1,6 +1,5 @@
 package com.example.weatherapp.data.local
 
-import androidx.annotation.NonNull
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.weatherapp.domain.weather.WeatherType
@@ -8,8 +7,8 @@ import java.time.LocalDateTime
 
 @Entity(tableName = "weather")
 data class WeatherEntity(
-    @PrimaryKey
-    @NonNull
+    @PrimaryKey(autoGenerate = true)
+    val id : Int = 0,
     val day : String,
     val time: LocalDateTime,
     val temperature: Double,
@@ -17,5 +16,6 @@ data class WeatherEntity(
     val weatherType: WeatherType,
     val description: String,
     val humidity: Double,
-    val rainDrop: Double
+    val rainDrop: Double,
+    val zipCode : String
 )

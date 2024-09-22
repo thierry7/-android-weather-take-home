@@ -37,7 +37,7 @@ fun WeatherResponse.toWeatherData(): List<WeatherData> {
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun WeatherResponse.toWeatherEntity(): List<WeatherEntity> {
+fun WeatherResponse.toWeatherEntity(zipCode : String): List<WeatherEntity> {
     return dailyForecasts.map { dailyForecast ->
         val day = dailyForecast.date
         val time = dailyForecast.date ?: ""
@@ -48,6 +48,7 @@ fun WeatherResponse.toWeatherEntity(): List<WeatherEntity> {
         val description = dailyForecast.day?.iconPhrase!!
         val rainDrop = dailyForecast.day?.rain?.value?.times(100) ?: 0
         WeatherEntity(
+            zipCode = zipCode,
             day = day!!,
             time = LocalDateTime.parse(time, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX")
             ),
@@ -63,6 +64,7 @@ fun WeatherResponse.toWeatherEntity(): List<WeatherEntity> {
 }
 fun WeatherEntity.toWeatherData(): WeatherData {
     return WeatherData(
+        id = this.id,
         day = this.day,
         time = this.time,
         temperature = this.temperature,
@@ -74,8 +76,9 @@ fun WeatherEntity.toWeatherData(): WeatherData {
     )
 }
 
-fun WeatherData.toWeatherEntity(): WeatherEntity {
+fun WeatherData.toWeatherEntity(zipCode: String): WeatherEntity {
     return WeatherEntity(
+        zipCode = zipCode,
         day = this.day!!,
         time = this.time,
         temperature = this.temperature.toDouble(),
@@ -90,8 +93,8 @@ fun List<WeatherEntity>.toWeatherDataList(): List<WeatherData> {
     return this.map { it.toWeatherData() }
 }
 
-fun List<WeatherData>.toWeatherEntityList(): List<WeatherEntity> {
-    return this.map { it.toWeatherEntity() }
+fun List<WeatherData>.toWeatherEntityList(zipCode: String): List<WeatherEntity> {
+    return this.map { it.toWeatherEntity(zipCode) }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)

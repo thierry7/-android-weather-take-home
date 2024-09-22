@@ -2,6 +2,7 @@ package com.example.weatherapp.ui
 
 import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -37,6 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -75,6 +77,8 @@ class MainActivity : ComponentActivity() {
 fun WeatherScreen(viewModel: WeatherViewModel = hiltViewModel(), navController: NavController) {
     val weatherState by viewModel.weatherForecast.collectAsState()
     var zipCode by remember { mutableStateOf("") }
+    val zipCodeRegex = Regex("^[0-9]{5}(?:-[0-9]{4})?$")
+    val context = LocalContext.current
 
     Box(modifier = Modifier
         .fillMaxSize()
@@ -101,7 +105,13 @@ fun WeatherScreen(viewModel: WeatherViewModel = hiltViewModel(), navController: 
             )
         )
         Button(
-            onClick = { viewModel.getDailyForecast(zipCode) },
+            onClick = { if (zipCode.isBlank()) {
+                Toast.makeText(context, "Please enter a zip code", Toast.LENGTH_SHORT).show()
+            } else if (!zipCodeRegex.matches(zipCode)) {
+                Toast.makeText(context, "Invalid zip code format", Toast.LENGTH_SHORT).show()
+            } else {
+                viewModel.getDailyForecast(zipCode)
+            } },
             modifier = Modifier.padding(top = 8.dp)
         ) {
             Text("Get Weather")
@@ -136,7 +146,7 @@ fun WeatherScreen(viewModel: WeatherViewModel = hiltViewModel(), navController: 
 
                         Card(modifier = Modifier
                             .clickable {
-                                navController.navigate("WeatherCard/${weatherData.day}")
+                                navController.navigate("WeatherCard/${weatherData.id}")
                             }
                             .padding(top = 12.dp)
                             .background(DarkBlue)
