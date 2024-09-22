@@ -29,6 +29,13 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+
+            buildConfigField ("String", "API_KEY", findProperty("API_KEY") as String)
+
+        }
+        debug{
+            buildConfigField ("String", "API_KEY", findProperty("API_KEY") as String)
+
         }
     }
     compileOptions {
@@ -40,6 +47,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"

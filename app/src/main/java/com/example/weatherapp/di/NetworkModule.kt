@@ -2,6 +2,7 @@ package com.example.weatherapp.di
 
 import android.content.Context
 import androidx.room.Room
+import com.example.weatherapp.BuildConfig
 import com.example.weatherapp.data.local.MyDatabase
 import com.example.weatherapp.data.local.WeatherDao
 import com.example.weatherapp.data.remote.WeatherApi
@@ -20,7 +21,7 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideApiKey(): String {
-        return "JfPQ007XGkqeGN5PqSSVvRANnJkUc8ME"
+        return BuildConfig.API_KEY
     }
 
     @Provides
