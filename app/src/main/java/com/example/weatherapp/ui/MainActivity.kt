@@ -77,6 +77,7 @@ class MainActivity : ComponentActivity() {
 fun WeatherScreen(viewModel: WeatherViewModel = hiltViewModel(), navController: NavController) {
     val weatherState by viewModel.weatherForecast.collectAsState()
     var zipCode by remember { mutableStateOf("") }
+    var loading by remember { mutableStateOf(false) }
     val zipCodeRegex = Regex("^[0-9]{5}(?:-[0-9]{4})?$")
     val context = LocalContext.current
 
@@ -110,38 +111,40 @@ fun WeatherScreen(viewModel: WeatherViewModel = hiltViewModel(), navController: 
             } else if (!zipCodeRegex.matches(zipCode)) {
                 Toast.makeText(context, "Invalid zip code format", Toast.LENGTH_SHORT).show()
             } else {
+                loading = true
                 viewModel.getDailyForecast(zipCode)
             } },
             modifier = Modifier.padding(top = 8.dp)
         ) {
             Text("Get Weather")
         }
+        if (loading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
 
         when (weatherState) {
-            is DataResult.Loading -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-            }
+            is DataResult.Loading -> {}
             is DataResult.Success -> {
+                loading = false
                 val weatherList = (weatherState as DataResult.Success<List<WeatherData>>).data
-
                 LazyColumn {
                     items(weatherList) { weatherData ->
 
                         val currentDate = LocalDate.now()
 
-                        // Format the weather date and compare with today
+
                         val weatherDate =
-                            weatherData.time.toLocalDate() // Assuming `weatherData.time` is a LocalDateTime
+                            weatherData.time.toLocalDate()
                         val formattedDate = if (weatherDate == currentDate) {
                             "Today"
                         } else {
-                            weatherData.time.format(DateTimeFormatter.ofPattern("EEEE")) // Name of the day (e.g., Monday)
+                            weatherData.time.format(DateTimeFormatter.ofPattern("EEEE"))
                         }
 
                         Card(modifier = Modifier
