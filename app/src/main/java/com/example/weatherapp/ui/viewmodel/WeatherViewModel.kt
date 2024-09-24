@@ -10,6 +10,7 @@ import com.example.weatherapp.domain.util.DataResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,10 +23,10 @@ class WeatherViewModel @Inject constructor(
 
     // State to hold the weather forecast data
     private val _weatherForecast = MutableStateFlow<DataResult<List<WeatherData>>>(DataResult.Loading)
-    val weatherForecast: StateFlow<DataResult<List<WeatherData>>> = _weatherForecast
+    val weatherForecast: StateFlow<DataResult<List<WeatherData>>> = _weatherForecast.asStateFlow()
 
     private val _dailyWeather = MutableStateFlow<DataResult<WeatherData>>(DataResult.Loading)
-    val dailyWeather : StateFlow<DataResult<WeatherData>> = _dailyWeather
+    val dailyWeather : StateFlow<DataResult<WeatherData>> = _dailyWeather.asStateFlow()
 
     // Method to fetch weather data from the repository
     @RequiresApi(Build.VERSION_CODES.O)
